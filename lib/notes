@@ -1,0 +1,10 @@
+flutter build web
+
+flutter pub add provider
+flutter pub add firebase_messaging
+
+keytool -list -v -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
+
+SHA1: 20:23:F0:9C:FC:21:95:4D:F2:28:E2:CE:66:A9:2C:50:71:68:09:87
+SHA256: C6:B0:E5:1B:AE:A0:92:94:92:BE:4D:07:A2:4B:32:92:40:BF:21:DB:B1:83:F4:0C:88:C7:29:50:A2:D3:9A:17
+
