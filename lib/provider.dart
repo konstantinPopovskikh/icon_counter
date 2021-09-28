@@ -2,7 +2,38 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class ReadMessageChanges extends ChangeNotifier {
-  Future<int> getUnreadMessages() async {
+  listenOnChatChanges() {
+    List<String> userChats = ['tyLp2LZryd1JI3ceDfnt', '32d5W1IpXqrwTHkKIlWg'];
+    FirebaseFirestore.instance
+        .collection('test_chats')
+        .where(FieldPath.documentId, whereIn: userChats)
+        .snapshots()
+        .listen((event) {
+      notifyListeners();
+    });
+  }
+
+  Future<int> getAllUnreadMessages() async {
+    int count = 0;
+    // only looking for chats of particular user
+    List<String> userChats = ['tyLp2LZryd1JI3ceDfnt', '32d5W1IpXqrwTHkKIlWg'];
+    await FirebaseFirestore.instance
+        .collection('test_chats')
+        .where(FieldPath.documentId, whereIn: userChats)
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        for (var message in doc.data()['messages']) {
+          if (message['read'] == false) {
+            count++;
+          }
+        }
+      }
+    });
+    return count;
+  }
+
+  Future<int> getSingleChatUnreadMessages() async {
     int count = 0;
     List<String> userChats = ['tyLp2LZryd1JI3ceDfnt', '32d5W1IpXqrwTHkKIlWg'];
     await FirebaseFirestore.instance
@@ -21,11 +52,11 @@ class ReadMessageChanges extends ChangeNotifier {
     return count;
   }
 
-  readChatMessages() async {
+  readChatMessages(String chatId) async {
     List<Map> readMessages = [];
     await FirebaseFirestore.instance
         .collection('test_chats')
-        .doc('tyLp2LZryd1JI3ceDfnt')
+        .doc(chatId)
         .get()
         .then((value) {
       for (var message in value.data()!['messages']) {
@@ -41,7 +72,5 @@ class ReadMessageChanges extends ChangeNotifier {
         .collection('test_chats')
         .doc('tyLp2LZryd1JI3ceDfnt')
         .set({'messages': readMessages});
-
-    notifyListeners();
   }
 }

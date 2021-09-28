@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  const ChatScreen({required this.chatId, Key? key}) : super(key: key);
+  final String chatId;
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<ReadMessageChanges>(context, listen: false).readChatMessages();
+    Provider.of<ReadMessageChanges>(context, listen: false)
+        .readChatMessages(chatId);
     return Scaffold(
       appBar: AppBar(
         title: Text('Chat Screen'),

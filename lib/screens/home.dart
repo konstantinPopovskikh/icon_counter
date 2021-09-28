@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
                     alignment: Alignment.topRight,
                     child: FutureBuilder(
                       future: Provider.of<ReadMessageChanges>(context)
-                          .getUnreadMessages(),
+                          .getAllUnreadMessages(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Text('');
@@ -48,7 +48,9 @@ class HomePage extends StatelessWidget {
               elevation: 8,
               child: ListTile(
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ChatScreen())),
+                    builder: (context) => const ChatScreen(
+                          chatId: 'tyLp2LZryd1JI3ceDfnt',
+                        ))),
                 leading: const Icon(Icons.person),
                 title: const Text('Read Chat'),
                 trailing: CounterBubble(
