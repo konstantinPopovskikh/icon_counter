@@ -1,4 +1,5 @@
 import 'package:fetchingapp/counter/counter_bubble.dart';
+import 'package:fetchingapp/main.dart';
 import 'package:fetchingapp/provider.dart';
 import 'package:fetchingapp/screens/chat_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,48 +20,75 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
             // userProfileCard(context: context, user: user),
-            SizedBox(
-              width: 60,
-              height: 60,
-              child: Stack(
-                children: [
-                  const Icon(CupertinoIcons.chat_bubble_text, size: 60),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: FutureBuilder(
-                      future: Provider.of<ReadMessageChanges>(context)
-                          .getAllUnreadMessages(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Text('');
-                        } else {
-                          print('snapshot data: ${snapshot.data}');
-                          return CounterBubble(
-                              unreadMessages: (snapshot.data as int));
-                        }
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Card(
-              elevation: 8,
-              child: ListTile(
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ChatScreen(
-                          chatId: 'tyLp2LZryd1JI3ceDfnt',
-                        ))),
-                leading: const Icon(Icons.person),
-                title: const Text('Read Chat'),
-                trailing: CounterBubble(
-                  unreadMessages: 25,
-                ),
-              ),
+            messageCloud(context),
+            Expanded(
+              child: chatList(context),
             )
           ],
         ),
       ),
     );
   }
+}
+
+Widget messageCloud(BuildContext context) {
+  return SizedBox(
+    width: 60,
+    height: 60,
+    child: Stack(
+      children: [
+        const Icon(CupertinoIcons.chat_bubble_text, size: 60),
+        Align(
+          alignment: Alignment.topRight,
+          child: FutureBuilder(
+            future: Provider.of<ReadMessageChanges>(context)
+                .getAllUnreadMessages(userChats),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Text('');
+              } else {
+                if ((snapshot.data as int) == 0) {
+                  return Text('');
+                } else {
+                  return CounterBubble(unreadMessages: (snapshot.data as int));
+                }
+              }
+            },
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+Widget chatList(BuildContext context) {
+  return ListView.builder(
+    itemCount: userChats.length,
+    itemBuilder: (context, index) {
+      final chat = userChats[index];
+      return ListTile(
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ChatScreen(
+                  chatId: chat,
+                ))),
+        leading: const Icon(Icons.person),
+        title: Text('Chat ID: $chat'),
+        trailing: FutureBuilder(
+          future:
+              Provider.of<ReadMessageChanges>(context).getChatUnreadCount(chat),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Text('');
+            } else {
+              if ((snapshot.data as int) == 0) {
+                return Text('');
+              } else {
+                return CounterBubble(unreadMessages: (snapshot.data as int));
+              }
+            }
+          },
+        ),
+      );
+    },
+  );
 }
