@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
-List<String> userChats = ['tyLp2LZryd1JI3ceDfnt', '32d5W1IpXqrwTHkKIlWg'];
+List<String> userChats = [
+  'tyLp2LZryd1JI3ceDfnt',
+  '32d5W1IpXqrwTHkKIlWg',
+  'EMOW7iAQe7WjAmGqRj6u'
+];
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

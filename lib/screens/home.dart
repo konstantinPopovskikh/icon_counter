@@ -1,7 +1,6 @@
 import 'package:fetchingapp/counter/counter_bubble.dart';
 import 'package:fetchingapp/main.dart';
 import 'package:fetchingapp/provider.dart';
-import 'package:fetchingapp/screens/chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -67,10 +66,8 @@ Widget chatList(BuildContext context) {
     itemBuilder: (context, index) {
       final chat = userChats[index];
       return ListTile(
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ChatScreen(
-                  chatId: chat,
-                ))),
+        onTap: () => Provider.of<ReadMessageChanges>(context, listen: false)
+        .readChatMessages(chat),
         leading: const Icon(Icons.person),
         title: Text('Chat ID: $chat'),
         trailing: FutureBuilder(
